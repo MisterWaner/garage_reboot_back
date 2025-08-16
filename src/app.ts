@@ -4,6 +4,8 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 
 config();
 
+import { userRoutes } from './routes/user.route.js';
+
 export default function buildApp() {
     const app = fastify({
         logger: true,
@@ -11,5 +13,7 @@ export default function buildApp() {
     app.get('/', (request: FastifyRequest, reply: FastifyReply) => {
         reply.send('API démarrée et opérationnelle');
     });
+
+    app.register(userRoutes)
     return app;
 }
