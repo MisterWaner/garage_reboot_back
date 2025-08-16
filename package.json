@@ -1,0 +1,27 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend for Garage Vincent Parrot Reborn",
+    "main": "server.js",
+    "author": "E. Soulas",
+    "license": "ISC",
+    "type": "module",
+    "scripts": {
+        "test": "vitest",
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon -r dotenv/config dist/server.js\" "
+    },
+    "dependencies": {
+        "dotenv": "^17.2.1",
+        "fastify": "^5.5.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.3.0",
+        "concurrently": "^9.2.0",
+        "nodemon": "^3.1.10",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.2",
+        "vitest": "^3.2.4"
+    }
+}
