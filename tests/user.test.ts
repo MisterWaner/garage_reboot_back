@@ -1,33 +1,94 @@
-import {describe, it, expect, beforeEach} from "vitest";
+import { describe, it, expect, beforeEach } from 'vitest';
+import { Role } from '../src/domain/user/user.entity.js'
 import buildApp from '../src/app.js';
 
 describe('User API', () => {
     let app = buildApp();
 
-    beforeEach(() => {
+    beforeEach(async () => {
         app = buildApp();
-    })
+        await app.ready();
 
-    it("GET /users => should return all users", async () => {
+        app.userRepository.createUser({
+            firstname: 'Alice',
+            lastname: 'Doe',
+            email: 'alice@example.com',
+            role: Role.EMPLOYEE,
+        });
+        app.userRepository.createUser({
+            firstname: 'Bob',
+            lastname: 'Smith',
+            email: 'bob@example.com',
+            role: Role.ADMIN,
+        });
+    });
+
+    it('GET /users => should return all users', async () => {
         const res = await app.inject({
             method: 'GET',
-            url: '/users'
-        })
+            url: '/users',
+        });
 
         expect(res.statusCode).toBe(200);
-        expect(res.json()).toEqual([]);
-    })
+        expect(res.json()).toEqual([
+            {
+                id: 1,
+                firstname: 'Alice',
+                lastname: 'Doe',
+                email: 'alice@example.com',
+                role: Role.EMPLOYEE,
+            },
+            {
+                id: 2,
+                firstname: 'Bob',
+                lastname: 'Smith',
+                email: 'bob@example.com',
+                role: Role.ADMIN,
+            },
+        ]);
+    });
 
-    it("POST /users => shold create a new user", async () => {
+    it('GET /users/:id => should return a user by id', async () => {
+        const res = await app.inject({
+            method: 'GET',
+            url: '/users/2',
+        });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.json()).toEqual({
+            id: 2,
+            firstname: 'Bob',
+            lastname: 'Smith',
+            email: 'bob@example.com',
+            role: Role.ADMIN,
+        });
+    });
+
+    it('POST /users => should create a new user', async () => {
         const res = await app.inject({
             method: 'POST',
             url: '/users',
             payload: {
-                name: "Alice"
-            }
-        })
+                firstname: 'John',
+                lastname: 'Doe',
+                email: 'john@example.com',
+                role: Role.EMPLOYEE,
+            },
+        });
 
+        console.log('STATUS:', res.statusCode);
+        console.log('RAW BODY:', res.body);
+
+        const data = res.json ? res.json() : JSON.parse(res.body as string);
+        console.log('PARSED BODY:', data);
+        
         expect(res.statusCode).toBe(201);
-        expect(res.json()).toEqual({ id: 1, name: "Alice" });
-    })
-})
+        expect(data).toEqual({
+            id: 3,
+            firstname: 'John',
+            lastname: 'Doe',
+            email: 'john@example.com',
+            role: Role.EMPLOYEE,
+        });
+    });
+});
