@@ -4,8 +4,11 @@ import type { CreateUserInput, UserResponse } from './user.entity.js';
 export class UserService {
     constructor(private repository: UserRepository) {}
 
-    async createUser(data: CreateUserInput): Promise<UserResponse> {
-        return await this.repository.createUser(data);
+    async createUser({firstname, lastname, role}: CreateUserInput): Promise<UserResponse> {
+        if (!firstname || !lastname || !role) {
+            throw new Error('Missing required fields');
+        }
+        return await this.repository.createUser({firstname, lastname, role});
     }
 
     async getUserById(id: number): Promise<UserResponse | null> {
@@ -18,5 +21,9 @@ export class UserService {
 
     async getAllUsers(): Promise<UserResponse[]> {
         return await this.repository.getAllUsers();
+    }
+
+    async deleteUser(id: number): Promise<void> {
+        await this.repository.deleteUser(id);
     }
 }

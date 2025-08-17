@@ -8,11 +8,6 @@ export enum Role {
 const userCore = {
     lastname: z.string({ error: 'Le nom est requis' }).trim(),
     firstname: z.string({ error: 'Le prénom est requis' }).trim(),
-    email: z
-        .email({ message: "L'email doit être valide" })
-        .toLowerCase()
-        .trim()
-        .optional(),
     role: z.enum([Role.EMPLOYEE, Role.ADMIN], { error: 'Le rôle est requis' }),
 };
 
@@ -33,17 +28,22 @@ const CreateUserDTOSchema = z.object({
 const userResponseSchema = z.object({
     ...userCore,
     id: z.number(),
+    email: z
+        .email({ message: "L'email doit être valide" })
+        .toLowerCase()
+        .trim()
+        .optional(),
     password: z.string().optional(),
 });
 
 const loginUserSchema = z.object({
-    email: userCore.email,
+    email: userResponseSchema.shape.email,
     password: passwordSchema,
 });
 
 const updatePasswordSchema = z
     .object({
-        email: userCore.email,
+        email: userResponseSchema.shape.email,
         currentPassword: passwordSchema,
         newPassword: passwordSchema,
         confirmNewPassword: passwordSchema,

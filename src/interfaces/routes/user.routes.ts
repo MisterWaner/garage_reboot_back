@@ -19,4 +19,5 @@ export async function userRoutes(app: FastifyInstance) {
         '/users/:id',
         controller.getUserById.bind(controller)
     );
+    app.delete<{ Params: { id: number } }>('/users/:id', controller.deleteUser.bind(controller));
 }

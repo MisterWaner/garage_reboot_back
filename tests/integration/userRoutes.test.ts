@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Role } from '../src/domain/user/user.entity.js'
-import buildApp from '../src/app.js';
+import buildApp from '../../src/app';
+import { Role } from '../../src/domain/user/user.entity';
 
 describe('User API', () => {
     let app = buildApp();
@@ -12,13 +12,11 @@ describe('User API', () => {
         app.userRepository.createUser({
             firstname: 'Alice',
             lastname: 'Doe',
-            email: 'alice@example.com',
             role: Role.EMPLOYEE,
         });
         app.userRepository.createUser({
             firstname: 'Bob',
             lastname: 'Smith',
-            email: 'bob@example.com',
             role: Role.ADMIN,
         });
     });
@@ -71,7 +69,6 @@ describe('User API', () => {
             payload: {
                 firstname: 'John',
                 lastname: 'Doe',
-                email: 'john@example.com',
                 role: Role.EMPLOYEE,
             },
         });
@@ -81,14 +78,22 @@ describe('User API', () => {
 
         const data = res.json ? res.json() : JSON.parse(res.body as string);
         console.log('PARSED BODY:', data);
-        
+
         expect(res.statusCode).toBe(201);
         expect(data).toEqual({
             id: 3,
             firstname: 'John',
             lastname: 'Doe',
-            email: 'john@example.com',
             role: Role.EMPLOYEE,
         });
+    });
+
+    it('DELETE /users/:id => should delete a specific user', async () => {
+        const res = await app.inject({
+            method: 'DELETE',
+            url: '/users/2',
+        });
+
+        expect(res.statusCode).toBe(204);
     });
 });

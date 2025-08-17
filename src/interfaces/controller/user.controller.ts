@@ -45,4 +45,17 @@ export class UserController {
             reply.status(500).send(error);
         }
     }
+
+    async deleteUser(
+        req: FastifyRequest<{ Params: { id: number } }>,
+        reply: FastifyReply
+    ) {
+        try {
+            const id = Number(req.params.id);
+            await this.userService.deleteUser(id);
+            reply.status(204).send();
+        } catch (error) {
+            reply.status(500).send(error);
+        }
+    }
 }

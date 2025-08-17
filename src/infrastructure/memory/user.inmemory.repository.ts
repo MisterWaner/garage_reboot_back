@@ -36,4 +36,9 @@ export class UserInMemoryRepository implements UserRepository {
     async getAllUsers(): Promise<UserResponse[]> {
         return Promise.resolve(this.users);
     }
+
+    async deleteUser(id: number): Promise<void> {
+        this.users = this.users.filter(user => user.id !== id);
+        return Promise.resolve();
+    }
 }
