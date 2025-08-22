@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { UserService } from '../../src/domain/user/user.service';
 import { UserInMemoryRepository } from '../../src/infrastructure/memory/user.inmemory.repository';
 import { Role } from '../../src/domain/user/user.entity';
+import { CarStatus, FuelType, Motorisation } from '../../src/domain/car/car.entity';
 
 let service: UserService;
 
@@ -92,3 +93,40 @@ describe('UserService.deleteUser', () => {
         await expect(service.getUserById(createdUser.id)).rejects.toThrow('User not found');
     });
 });
+
+describe('UserService.addCar', () => {
+    it('a user should add a car', async () => {
+        const car = await service.addCar({
+            brand: 'Toyota',
+            model: 'Corolla',
+            year: 2020,
+            status: CarStatus.AVAILABLE,
+            kilometers: 15000,
+            price: 20000,
+            images: ['https://example.com/car1.jpg'],
+            motorisation: Motorisation.AUTOMATIC,
+            fuelType: FuelType.ESSENCE,
+            color: 'Red',
+            reference: 'CAR-123',
+            addedBy: 1,
+            createdAt: new Date().getDate().toString(),
+        });
+
+        expect(car).toEqual({
+            id: 'CAR-123',
+            brand: 'Toyota',
+            model: 'Corolla',
+            year: 2020,
+            status: CarStatus.AVAILABLE,
+            kilometers: 15000,
+            price: 20000,
+            images: ['https://example.com/car1.jpg'],
+            motorisation: Motorisation.AUTOMATIC,
+            fuelType: FuelType.ESSENCE,
+            color: 'Red',
+            reference: 'CAR-123',
+            addedBy: 1,
+            createdAt: new Date().getDate().toString(),
+        });
+    });
+})

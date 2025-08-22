@@ -1,5 +1,6 @@
 import type { UserRepository } from "../../domain/user/user.repository.js";
 import type { CreateUserInput, UserResponse } from "../../domain/user/user.entity.js";
+import type { CarResponse, CreateCarInput } from "../../domain/car/car.entity.js";
 import { Role } from "../../domain/user/user.entity.js";
 
 export class UserInMemoryRepository implements UserRepository {
@@ -40,5 +41,21 @@ export class UserInMemoryRepository implements UserRepository {
     async deleteUser(id: number): Promise<void> {
         this.users = this.users.filter(user => user.id !== id);
         return Promise.resolve();
+    }
+
+    async addCar(data: CreateCarInput): Promise<CarResponse> {
+        const userId = (await this.getUserById(1))?.id;
+
+        if (!userId) {
+            throw new Error('User not found');
+        }
+
+        const newCar: CarResponse = {
+            ...data,
+            id: 'CAR-123',
+            addedBy: userId,
+            createdAt: new Date().getDate().toString(),
+        };
+        return Promise.resolve(newCar);
     }
 }
