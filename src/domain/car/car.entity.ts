@@ -45,12 +45,15 @@ const CreateCarDTOSchema = z.object({
 const carResponseSchema = z.object({
     ...CreateCarDTOSchema.shape,
     id: z.string().max(12),
+    updatedAt: z.string().optional(),
+    updatedBy: z.number().optional(),
 });
 
 const UpdatedCarDTOSchema = z.object({
     ...carCore,
     id: z.string().max(12),
     updatedAt: z.string(),
+    updatedBy: z.number(),
 });
 
 export type CreateCarInput = z.infer<typeof CreateCarDTOSchema>;

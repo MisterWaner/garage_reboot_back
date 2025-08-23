@@ -1,6 +1,6 @@
 import type { UserRepository } from "../../domain/user/user.repository.js";
 import type { CreateUserInput, UserResponse } from "../../domain/user/user.entity.js";
-import type { CarResponse, CreateCarInput } from "../../domain/car/car.entity.js";
+import type { CarResponse, CreateCarInput, UpdatedCarInput } from "../../domain/car/car.entity.js";
 import { Role } from "../../domain/user/user.entity.js";
 
 export class UserInMemoryRepository implements UserRepository {
@@ -57,5 +57,28 @@ export class UserInMemoryRepository implements UserRepository {
             createdAt: new Date().getDate().toString(),
         };
         return Promise.resolve(newCar);
+    }
+
+    async updateCar(data: UpdatedCarInput): Promise<CarResponse> {
+        const userId = (await this.getUserById(1))?.id;
+        const updaterId = (await this.getUserById(2))?.id;
+
+        if (!userId) {
+            throw new Error('User not found');
+        }
+
+        const updatedCar: CarResponse = {
+            ...data,
+            id: 'CAR-123',
+            updatedBy: updaterId,
+            addedBy: userId,
+            createdAt: new Date().getDate().toString(),
+        };
+        return Promise.resolve(updatedCar);
+    }
+
+    async deleteCar(id: string): Promise<void> {
+        // Simulate deleting a car
+        return Promise.resolve();
     }
 }

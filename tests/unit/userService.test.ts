@@ -3,11 +3,15 @@ import { UserService } from '../../src/domain/user/user.service';
 import { UserInMemoryRepository } from '../../src/infrastructure/memory/user.inmemory.repository';
 import { Role } from '../../src/domain/user/user.entity';
 import { CarStatus, FuelType, Motorisation } from '../../src/domain/car/car.entity';
+import { CarService } from '../../src/domain/car/car.service';
+import { CarInMemoryRepository } from '../../src/infrastructure/memory/car.inmemory.repository';
 
 let service: UserService;
+let carService: CarService;
 
 beforeEach(() => {
     service = new UserService(new UserInMemoryRepository());
+    carService = new CarService(new CarInMemoryRepository());
 });
 
 describe('UserService.createUser', () => {
@@ -130,3 +134,44 @@ describe('UserService.addCar', () => {
         });
     });
 })
+
+describe('UserService.updateCar', () => {
+    it('should update a car', async () => {
+        const selectedCar = await carService.getCarById('CAR-123');
+        const userId = (await service.getUserById(2))?.id;
+
+        if (!selectedCar) {
+            throw new Error('Car not found');
+        }
+
+        const updatedCar = await service.updateCar({
+            id: 'CAR-123',
+            brand: 'Toyota',
+            model: 'Corolla',
+            year: 2020,
+            status: CarStatus.AVAILABLE,
+            kilometers: 15000,
+            price: 20000,
+            images: ['https://example.com/car1.jpg'],
+            motorisation: Motorisation.AUTOMATIC,
+            fuelType: FuelType.ESSENCE,
+            reference: 'CAR-123',
+            color: 'Blue',
+            updatedAt: new Date().getDate().toString(),
+            updatedBy: userId || 2,
+        });
+
+        expect(updatedCar).toEqual({
+            ...selectedCar,
+            color: 'Blue',
+            updatedAt: new Date().getDate().toString(),
+            updatedBy: 2
+        })
+    })
+})
+
+describe('UserService.deleteCar', () => {
+    it('should delete a car by id', async () => {
+        await service.deleteCar('CAR-123');
+    })
+});

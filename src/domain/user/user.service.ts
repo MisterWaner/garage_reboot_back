@@ -1,6 +1,6 @@
 import type { UserRepository } from './user.repository.js';
 import type { CreateUserInput, UserResponse } from './user.entity.js';
-import type { CarResponse, CreateCarInput } from '../car/car.entity.js';
+import type { CarResponse, CreateCarInput, UpdatedCarInput } from '../car/car.entity.js';
 
 export class UserService {
     constructor(private repository: UserRepository) {}
@@ -30,5 +30,13 @@ export class UserService {
 
     async addCar(data: CreateCarInput): Promise<CarResponse> {
         return await this.repository.addCar(data);
+    }
+
+    async updateCar(data: UpdatedCarInput): Promise<CarResponse> {
+        return await this.repository.updateCar(data);
+    }
+
+    async deleteCar(id: string): Promise<void> {
+        await this.repository.deleteCar(id);
     }
 }
