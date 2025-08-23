@@ -1,6 +1,8 @@
-import type { CarResponse } from "./car.entity.js";
+import { Car } from "./Car.js";
 
 export interface CarRepository {
-    getAllCars(): Promise<CarResponse[]>;
-    getCarById(id: string): Promise<CarResponse | null>;
+    save(car: Car): Promise<void>;
+    findAll(): Promise<Car[]>;
+    findById(id: string): Promise<Car | null>;
+    delete(id: string): Promise<void>;
 }

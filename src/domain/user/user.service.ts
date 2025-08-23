@@ -1,15 +1,23 @@
 import type { UserRepository } from './user.repository.js';
-import type { CreateUserInput, UserResponse } from './user.entity.js';
-import type { CarResponse, CreateCarInput, UpdatedCarInput } from '../car/car.entity.js';
+import type { CreateUserInput, UserResponse } from './User.js';
+import type {
+    CarResponse,
+    CreateCarInput,
+    UpdatedCarInput,
+} from '../car/Car.js';
 
 export class UserService {
     constructor(private repository: UserRepository) {}
 
-    async createUser({firstname, lastname, role}: CreateUserInput): Promise<UserResponse> {
+    async createUser({
+        firstname,
+        lastname,
+        role,
+    }: CreateUserInput): Promise<UserResponse> {
         if (!firstname || !lastname || !role) {
             throw new Error('Missing required fields');
         }
-        return await this.repository.createUser({firstname, lastname, role});
+        return await this.repository.createUser({ firstname, lastname, role });
     }
 
     async getUserById(id: number): Promise<UserResponse | null> {
