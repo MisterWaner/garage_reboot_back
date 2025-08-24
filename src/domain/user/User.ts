@@ -18,7 +18,7 @@ export class User {
     ) {
         this.id = User.idCounter++;
         this.email = this.generateEmail(firstname, lastname);
-        this.password = this.generateTemporaryPassword();
+        this.password = 'azertyop123456';
     }
 
     // Methods
@@ -29,9 +29,9 @@ export class User {
         return `${cleanFirst}.${cleanLast}@${domain}`;
     }
 
-    private generateTemporaryPassword(length = 20): string {
-        return crypto.randomBytes(length).toString('hex').slice(0, length);
-    }
+    // private generateTemporaryPassword(length = 20): string {
+    //     return crypto.randomBytes(length).toString('hex').slice(0, length);
+    // }
 
     // Getters
     getId(): number {

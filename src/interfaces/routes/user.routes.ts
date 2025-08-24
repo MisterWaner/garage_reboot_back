@@ -3,14 +3,14 @@ import { UserController } from '../controller/user.controller.js';
 import { UserInMemoryRepository } from '../../infrastructure/memory/user.inmemory.repository.js';
 import type { CreateUserDTO } from '../../domain/user/UserFactory.js';
 import { User } from '../../domain/user/User.js';
-import { CreateUserUseCase } from '../../application/user/CreateUserUseCase.js';
-import { GetUserByIdUseCase } from '../../application/user/GetUserByIdUseCase.js';
+import { CreateUserUseCase } from '../../application/usecases/create-user.usecase.js';
+import { GetUserUseCase } from '../../application/usecases/get-user.usecase.js';
 
 export async function userRoutes(app: FastifyInstance) {
     const repo = new UserInMemoryRepository();
     const createUserUseCase = new CreateUserUseCase(repo);
-    const getUserByIdUseCase = new GetUserByIdUseCase(repo);
-    const controller = new UserController(createUserUseCase, getUserByIdUseCase);
+    const getUserUseCase = new GetUserUseCase(repo);
+    const controller = new UserController(createUserUseCase, getUserUseCase);
 
     app.post<{ Body: CreateUserDTO }>(
         '/users',

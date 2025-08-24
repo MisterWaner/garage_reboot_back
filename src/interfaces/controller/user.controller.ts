@@ -1,10 +1,13 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { CreateUserDTO } from '../../domain/user/UserFactory.js';
-import { CreateUserUseCase } from '../../application/user/CreateUserUseCase.js';
-import { GetUserByIdUseCase } from '../../application/user/GetUserByIdUseCase.js';
+import { CreateUserUseCase } from '../../application/usecases/create-user.usecase.js';
+import { GetUserUseCase } from '../../application/usecases/get-user.usecase.js';
 
 export class UserController {
-    constructor(private createUserUseCase: CreateUserUseCase, private getUserByIdUseCase: GetUserByIdUseCase) {}
+    constructor(
+        private createUserUseCase: CreateUserUseCase,
+        private getUserUseCase: GetUserUseCase
+    ) {}
 
     async createUser(
         req: FastifyRequest<{
@@ -40,7 +43,7 @@ export class UserController {
     ) {
         try {
             const id = Number(req.params.id);
-            const user = await this.getUserByIdUseCase.execute(id);
+            const user = await this.getUserUseCase.byId(id);
             reply.status(200).send(user);
         } catch (error) {
             reply.status(500).send(error);

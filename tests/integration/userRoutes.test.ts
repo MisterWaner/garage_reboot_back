@@ -16,7 +16,7 @@ describe('User Routes', () => {
             method: 'POST',
             url: '/users',
             payload: {
-                firstname: 'Jane',
+                firstname: 'Steve',
                 lastname: 'Doe',
                 role: Role.EMPLOYEE,
             },
@@ -28,16 +28,18 @@ describe('User Routes', () => {
     it('GET /users/:id - should retrieve user with id', async () => {
         const response = await app.inject({
             method: 'GET',
-            url: '/users/1',
+            url: '/users/6',
         });
 
         expect(response.statusCode).toBe(200);
         const body = response.json();
         expect(body).toEqual({
-            id: 1,
-            firstname: 'Jane',
+            id: 6,
+            firstname: 'Steve',
             lastname: 'Doe',
-            email: 'jane.doe@garage-vincent-parrot.com',
+            email: 'steve.doe@garage-vincent-parrot.com',
+            role: Role.EMPLOYEE,
+            password: 'azertyop123456'
         });
     });
 

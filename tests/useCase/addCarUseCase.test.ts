@@ -1,25 +1,25 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { CarInMemoryRepository } from '../../src/infrastructure/memory/car.inmemory.repository';
 import { Motorisation, FuelType, CarStatus } from '../../src/domain/car/Car';
-import { AddCarUseCase } from '../../src/application/car/AddCarUseCase';
-import { GetUserByIdUseCase } from '../../src/application/user/GetUserByIdUseCase';
+import { AddCarUseCase } from '../../src/application/usecases/add-car.usecase';
+import { GetUserUseCase } from '../../src/application/usecases/get-user.usecase';
 import { UserInMemoryRepository } from '../../src/infrastructure/memory/user.inmemory.repository';
 
 describe('AddCarUseCase', () => {
     let userRepo: UserInMemoryRepository;
     let carRepo: CarInMemoryRepository;
     let addCarUseCase: AddCarUseCase;
-    let getUserByIdUseCase: GetUserByIdUseCase;
+    let getUserUseCase: GetUserUseCase;
 
     beforeEach(() => {
         userRepo = new UserInMemoryRepository();
         carRepo = new CarInMemoryRepository();
         addCarUseCase = new AddCarUseCase(carRepo);
-        getUserByIdUseCase = new GetUserByIdUseCase(userRepo);
+        getUserUseCase = new GetUserUseCase(userRepo);
     });
 
     it('should add a new car with immatriculation as ID and generate reference', async () => {
-        const user = await getUserByIdUseCase.execute(1);
+        const user = await getUserUseCase.byId(1);
         const car = await addCarUseCase.execute(
             {
                 immatriculation: 'AB-123-CD',
@@ -41,13 +41,13 @@ describe('AddCarUseCase', () => {
         expect(car.car.getStatus()).toBe(CarStatus.AVAILABLE);
         expect(car.car.getAddedBy()).toBe(1);
 
-        const stored = await carRepo.findById('AB-123-CD');
+        const stored = await carRepo.findCarById('AB-123-CD');
         expect(stored).not.toBeNull();
         expect(stored?.getId()).toBe('AB-123-CD');
     });
 
     it('should not allowing adding a car with same immatriculation twice', async () => {
-        const user = await getUserByIdUseCase.execute(1);
+        const user = await getUserUseCase.byId(1);
         const firstCar = await addCarUseCase.execute(
             {
                 immatriculation: 'EF-456-GH',

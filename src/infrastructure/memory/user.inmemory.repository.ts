@@ -1,35 +1,34 @@
-import type { UserRepository } from "../../domain/user/user.repository.js";
-import { Role, User } from "../../domain/user/User.js";
+import { UserRepository } from '../../application/repositories/user.repository.js';
+import { Role, User } from '../../domain/user/User.js';
 
 export class UserInMemoryRepository implements UserRepository {
-    private users: User[] = [
+    users: User[] = [
         new User('Jane', 'Doe', Role.EMPLOYEE),
         new User('John', 'Doe', Role.EMPLOYEE),
     ];
-    private counterId = 3;
 
-    async save(user: User): Promise<void> {
-        user = new User('Tom', 'Brown', Role.EMPLOYEE);
-        this.counterId++;
-        this.users.push(user);
+    saveUser(user: User): Promise<void> {
+        this.addUser(user);
+        return Promise.resolve();
     }
 
-    async findById(id: number): Promise<User | null> {
-        return this.users.find(user => user.getId() === id) || null;
+    findAllUsers(): Promise<User[]> {
+        return Promise.resolve(Array.from(this.users.values()));
     }
-
-    async findAll(): Promise<User[]> {
-        return this.users;
+    findUserById(id: number): Promise<User | null> {
+        const user = this.users.find((user) => user.getId() === id);
+        return Promise.resolve(user || null);
     }
-
-    async findByEmail(email: string): Promise<User | null> {
-        const users = await this.findAll();
-
-        for (const user of users) {
+    findUserByEmail(email: string): Promise<User | null> {
+        for (const user of this.users.values()) {
             if (user.getEmail() === email) {
-                return user;
+                return Promise.resolve(user);
             }
         }
-        return null;
+        return Promise.resolve(null);
+    }
+
+    private addUser(user: User) {
+        this.users.push(user);
     }
 }

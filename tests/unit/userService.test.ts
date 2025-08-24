@@ -7,17 +7,17 @@ import { UserFactory } from '../../src/domain/user/UserFactory';
 describe('User Entity & Factory', () => {
     it('should create a user with auto-generated email and password', async () => {
         const createdUser = UserFactory.create({
-            firstname: 'John',
-            lastname: 'Doe',
+            firstname: 'Tom',
+            lastname: 'Bones',
             role: Role.EMPLOYEE,
         })
 
-        expect(createdUser.getFirstname()).toBe("John");
-        expect(createdUser.getLastname()).toBe("Doe");
-        expect(createdUser.getEmail()).toBe("john.doe@garage-vincent-parrot.com");
+        expect(createdUser.getFirstname()).toBe("Tom");
+        expect(createdUser.getLastname()).toBe("Bones");
+        expect(createdUser.getEmail()).toBe("tom.bones@garage-vincent-parrot.com");
         expect(createdUser.getRole()).toBe(Role.EMPLOYEE);
         expect(createdUser.getPassword()).toBeDefined();
-        expect(createdUser.getPassword()?.length).toBe(20);
+        expect(createdUser.getPassword()?.length).toBe(14);
     });
 });
 
@@ -30,16 +30,16 @@ describe('User Repository', () => {
 
     it('should save and retrieve a user', async () => {
         const createdUser = UserFactory.create({
-            firstname: 'Jane',
+            firstname: 'Caroline',
             lastname: 'Doe',
             role: Role.ADMIN,
         });
 
-        await repo.save(createdUser);
+        await repo.saveUser(createdUser);
 
-        const retrievedUser = await repo.findById(2);
+        const retrievedUser = await repo.findUserById(4);
         expect(retrievedUser).toEqual(createdUser);
-        expect(retrievedUser?.getId()).toBe(2);
+        expect(retrievedUser?.getId()).toBe(4);
     });
 
     it("should retrieve all users", async () => {
@@ -54,10 +54,10 @@ describe('User Repository', () => {
             role: Role.ADMIN,
         });
 
-        await repo.save(user1);
-        await repo.save(user2);
+        await repo.saveUser(user1);
+        await repo.saveUser(user2);
 
-        const allUsers = await repo.findAll();
+        const allUsers = await repo.findAllUsers();
         expect(allUsers).toEqual([user1, user2]);
     });
 });

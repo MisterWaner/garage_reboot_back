@@ -82,9 +82,9 @@ describe("Car Repository", () => {
             color: 'Blue',
         });
 
-        await repo.save(car);
+        await repo.saveCar(car);
 
-        const retrievedCar = await repo.findById('DE-456-EF');
+        const retrievedCar = await repo.findCarById('DE-456-EF');
         expect(retrievedCar).toEqual(car);
         expect(retrievedCar?.getId()).toBe('DE-456-EF');
         expect(retrievedCar).not.toBeNull();
@@ -119,8 +119,8 @@ describe("Car Repository", () => {
             color: 'Red',
         });
 
-        await repo.save(car1);
+        await repo.saveCar(car1);
 
-        await expect(repo.save(car2)).rejects.toThrowError('Une voiture avec cet ID existe déjà.');
+        await expect(repo.saveCar(car2)).rejects.toThrowError('Une voiture avec cet ID existe déjà.');
     });
 })
