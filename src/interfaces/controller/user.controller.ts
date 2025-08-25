@@ -2,11 +2,13 @@ import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { CreateUserDTO } from '../../domain/user/UserFactory.js';
 import { CreateUserUseCase } from '../../application/usecases/create-user.usecase.js';
 import { GetUserUseCase } from '../../application/usecases/get-user.usecase.js';
+import { DeleteUserUseCase } from '../../application/usecases/delete-user.usecase.js';
 
 export class UserController {
     constructor(
         private createUserUseCase: CreateUserUseCase,
-        private getUserUseCase: GetUserUseCase
+        private getUserUseCase: GetUserUseCase,
+        private deleteUserUseCase: DeleteUserUseCase
     ) {}
 
     async createUser(
@@ -14,6 +16,7 @@ export class UserController {
             Body: {
                 firstname: CreateUserDTO['firstname'];
                 lastname: CreateUserDTO['lastname'];
+                birthdate: CreateUserDTO['birthdate'];
                 role: CreateUserDTO['role'];
             };
         }>,
@@ -28,21 +31,21 @@ export class UserController {
         }
     }
 
-    // async getAllUsers(req: FastifyRequest, reply: FastifyReply) {
-    //     try {
-    //         const users = await this.userService.getAllUsers();
-    //         reply.status(200).send(users);
-    //     } catch (error) {
-    //         reply.status(500).send(error);
-    //     }
-    // }
+    async getAllUsers(req: FastifyRequest, reply: FastifyReply) {
+        try {
+            const users = await this.getUserUseCase.all();
+            reply.status(200).send(users);
+        } catch (error) {
+            reply.status(500).send(error);
+        }
+    }
 
     async getUserById(
-        req: FastifyRequest<{ Params: { id: number } }>,
+        req: FastifyRequest<{ Params: { id: string } }>,
         reply: FastifyReply
     ) {
         try {
-            const id = Number(req.params.id);
+            const id = req.params.id;
             const user = await this.getUserUseCase.byId(id);
             reply.status(200).send(user);
         } catch (error) {
@@ -50,16 +53,16 @@ export class UserController {
         }
     }
 
-    // async deleteUser(
-    //     req: FastifyRequest<{ Params: { id: number } }>,
-    //     reply: FastifyReply
-    // ) {
-    //     try {
-    //         const id = Number(req.params.id);
-    //         await this.userService.deleteUser(id);
-    //         reply.status(204).send();
-    //     } catch (error) {
-    //         reply.status(500).send(error);
-    //     }
-    // }
+    async deleteUser(
+        req: FastifyRequest<{ Params: { id: string } }>,
+        reply: FastifyReply
+    ) {
+        try {
+            const id = req.params.id;
+            await this.deleteUserUseCase.execute(id);
+            reply.status(204).send();
+        } catch (error) {
+            reply.status(500).send(error);
+        }
+    }
 }

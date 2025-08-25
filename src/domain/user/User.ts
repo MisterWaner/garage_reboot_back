@@ -1,40 +1,21 @@
-import crypto from 'crypto';
-
 export enum Role {
     EMPLOYEE = 'employee',
     ADMIN = 'admin',
 }
 
 export class User {
-    private static idCounter = 1;
-    private email: string;
-    private password: string;
-    private readonly id: number
-
     constructor(
+        private readonly id: string,
         private firstname: string,
         private lastname: string,
-        private role: Role
-    ) {
-        this.id = User.idCounter++;
-        this.email = this.generateEmail(firstname, lastname);
-        this.password = 'azertyop123456';
-    }
-
-    // Methods
-    private generateEmail(firstname: string, lastname: string): string {
-        const domain = 'garage-vincent-parrot.com';
-        const cleanFirst = firstname.trim().toLowerCase().replace(/\s+/g, '.');
-        const cleanLast = lastname.trim().toLowerCase().replace(/\s+/g, '.');
-        return `${cleanFirst}.${cleanLast}@${domain}`;
-    }
-
-    // private generateTemporaryPassword(length = 20): string {
-    //     return crypto.randomBytes(length).toString('hex').slice(0, length);
-    // }
-
+        private birthdate: Date,
+        private role: Role,
+        private email: string,
+        private password: string = 'azertyop123456'
+    ) {}
+    
     // Getters
-    getId(): number {
+    getId(): string {
         return this.id;
     }
 
@@ -44,6 +25,10 @@ export class User {
 
     getLastname(): string {
         return this.lastname;
+    }
+
+    getBirthdate(): Date {
+        return this.birthdate;
     }
 
     getRole(): Role {

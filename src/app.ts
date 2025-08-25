@@ -1,26 +1,16 @@
-import { config } from 'dotenv';
-import fastify from 'fastify';
-import type { FastifyRequest, FastifyReply } from 'fastify';
+import { UserInMemoryRepository } from "./infrastructure/memory/user.inmemory.repository.js";
+import { UniqueUserIdGenerator } from "./domain/user/UniqueUserIdGenerator.js";
+import { UserFactory } from "./domain/user/UserFactory.js";
+import { CreateUserUseCase } from "./application/usecases/create-user.usecase.js";
 
-config();
+const userRepository = new UserInMemoryRepository();
+const userIdGenerator = new UniqueUserIdGenerator(userRepository);
+const userFactory = new UserFactory(userIdGenerator);
 
-import { userRoutes } from './interfaces/routes/user.routes.js';
-import { UserInMemoryRepository } from './infrastructure/memory/user.inmemory.repository.js';
+const createUserUseCase = new CreateUserUseCase(userRepository, userFactory);
 
-declare module 'fastify' {
-    interface FastifyInstance {
-        userRepository: UserInMemoryRepository;
+export const app = {
+    useCases: {
+        createUser: createUserUseCase
     }
-}
-
-export default function buildApp() {
-    const app = fastify({
-        logger: true,
-    });
-    app.get('/', (request: FastifyRequest, reply: FastifyReply) => {
-        reply.send('API démarrée et opérationnelle');
-    });
-    app.decorate('userRepository', new UserInMemoryRepository());
-    app.register(userRoutes)
-    return app;
 }
