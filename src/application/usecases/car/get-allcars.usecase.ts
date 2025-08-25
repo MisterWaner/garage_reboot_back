@@ -1,5 +1,5 @@
-import { CarRepository } from "../repositories/car.repository.js";
-import { Car } from "../../domain/car/Car.js";
+import { CarRepository } from '../../repositories/car.repository.js';
+import { Car } from '../../../domain/car/Car.js';
 
 export class GetAllCarsUseCase {
     constructor(private readonly carRepository: CarRepository) {}

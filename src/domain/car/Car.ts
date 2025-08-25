@@ -29,8 +29,8 @@ export class Car {
     private fuelType: FuelType;
     private color: string;
     private reference: string;
-    private addedBy?: number | undefined;
-    private updatedBy?: number | undefined;
+    private addedBy?: string | undefined;
+    private updatedBy?: string | undefined;
     private readonly createdAt: string | undefined;
     private updatedAt?: string | undefined;
 
@@ -47,8 +47,8 @@ export class Car {
         fuelType: FuelType;
         color: string;
         reference: string;
-        addedBy?: number;
-        updatedBy?: number;
+        addedBy?: string;
+        updatedBy?: string;
         createdAt?: string;
         updatedAt?: string;
     }) {
@@ -139,11 +139,11 @@ export class Car {
         return this.reference;
     }
 
-    public getAddedBy(): number | undefined {
+    public getAddedBy(): string | undefined {
         return this.addedBy;
     }
 
-    public getUpdatedBy(): number | undefined {
+    public getUpdatedBy(): string | undefined {
         return this.updatedBy;
     }
 
@@ -153,24 +153,5 @@ export class Car {
 
     public getUpdatedAt(): string | undefined {
         return this.updatedAt;
-    }
-
-    //Méthodes métiers
-    public changeStatus(newStatus: CarStatus, userId: number): void {
-        this.status = newStatus;
-        this.setUpdated(userId);
-    }
-
-    public updatePrice(newPrice: number, userId: number): void {
-        if (newPrice < 0) {
-            throw new Error('Le prix ne peut pas être négatif');
-        }
-        this.price = newPrice;
-        this.setUpdated(userId);
-    }
-
-    private setUpdated(userId: number): void {
-        this.updatedBy = userId;
-        this.updatedAt = new Date().toISOString();
     }
 }

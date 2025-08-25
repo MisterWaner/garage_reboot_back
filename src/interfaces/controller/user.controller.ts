@@ -1,8 +1,8 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { CreateUserDTO } from '../../domain/user/UserFactory.js';
-import { CreateUserUseCase } from '../../application/usecases/create-user.usecase.js';
-import { GetUserUseCase } from '../../application/usecases/get-user.usecase.js';
-import { DeleteUserUseCase } from '../../application/usecases/delete-user.usecase.js';
+import { CreateUserUseCase } from '../../application/usecases/user/create-user.usecase.js';
+import { GetUserUseCase } from '../../application/usecases/user/get-user.usecase.js';
+import { DeleteUserUseCase } from '../../application/usecases/user/delete-user.usecase.js';
 
 export class UserController {
     constructor(

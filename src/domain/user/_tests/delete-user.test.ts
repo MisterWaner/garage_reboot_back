@@ -1,10 +1,10 @@
 import { describe, beforeEach, expect, it } from 'vitest';
 import { UserInMemoryRepository } from '../../../infrastructure/memory/user.inmemory.repository.js';
-import { DeleteUserUseCase } from '../../../application/usecases/delete-user.usecase.js';
+import { DeleteUserUseCase } from '../../../application/usecases/user/delete-user.usecase.js';
 import { User, Role } from '../User.js';
 import { UserFactory } from '../UserFactory.js';
 import type { CreateUserDTO } from '../UserFactory.js';
-import { CreateUserUseCase } from '../../../application/usecases/create-user.usecase.js';
+import { CreateUserUseCase } from '../../../application/usecases/user/create-user.usecase.js';
 import { UniqueUserIdGenerator } from '../UniqueUserIdGenerator.js';
 
 describe('Feature: Delete a user', () => {
@@ -17,8 +17,13 @@ describe('Feature: Delete a user', () => {
     });
 
     it('Should delete a user by ID', async () => {
-        const userFactory = new UserFactory(new UniqueUserIdGenerator(userRepository));
-        const createUserUseCase = new CreateUserUseCase(userRepository, userFactory);
+        const userFactory = new UserFactory(
+            new UniqueUserIdGenerator(userRepository)
+        );
+        const createUserUseCase = new CreateUserUseCase(
+            userRepository,
+            userFactory
+        );
 
         const user = await createUserUseCase.execute({
             firstname: 'John',
@@ -39,4 +44,4 @@ describe('Feature: Delete a user', () => {
         const deletedUser = await userRepository.findUserById(user.getId());
         expect(deletedUser).toBeNull();
     });
-})
+});

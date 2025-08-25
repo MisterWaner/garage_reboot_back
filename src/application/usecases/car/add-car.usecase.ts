@@ -1,21 +1,24 @@
-import type { CreateCarDTO } from '../../domain/car/CarFactory.js';
-import { Car } from '../../domain/car/Car.js';
-import { CarFactory } from '../../domain/car/CarFactory.js';
-import { CarRepository } from '../repositories/car.repository.js';
-import { User } from '../../domain/user/User.js';
+import type { CreateCarDTO } from '../../../domain/car/CarFactory.js';
+import { Car } from '../../../domain/car/Car.js';
+import { CarFactory } from '../../../domain/car/CarFactory.js';
+import { CarRepository } from '../../repositories/car.repository.js';
+import { User } from '../../../domain/user/User.js';
 
 interface AddCarResponse {
     car: Car;
 }
 
 export class AddCarUseCase {
-    constructor(private readonly carRepository: CarRepository) {}
+    constructor(
+        private readonly carRepository: CarRepository,
+        private readonly carFactory: CarFactory
+    ) {}
 
     async execute(
         data: Omit<CreateCarDTO, 'addedBy'>,
         user: User
     ): Promise<AddCarResponse> {
-        const car = CarFactory.create({
+        const car = await this.carFactory.create({
             brand: data.brand,
             immatriculation: data.immatriculation,
             model: data.model,

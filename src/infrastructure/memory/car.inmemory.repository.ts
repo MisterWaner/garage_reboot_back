@@ -16,6 +16,11 @@ export class CarInMemoryRepository implements CarRepository {
     async findCarById(id: string): Promise<Car | null> {
         return this.cars.get(id) || null;
     }
+
+    async findCarByReference(reference: string): Promise<Car | null> {
+        return Array.from(this.cars.values()).find(car => car.getReference() === reference) || null;
+    }
+
     async deleteCar(id: string): Promise<void> {
         this.cars.delete(id);
     }

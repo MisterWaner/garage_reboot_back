@@ -1,5 +1,6 @@
 import { Car, CarStatus, Motorisation, FuelType } from './Car.js';
 import { User } from '../user/User.js';
+import { CarReferenceGenerator } from './CarReferenceGenerator.js';
 
 export interface CreateCarDTO {
     immatriculation: string;
@@ -15,31 +16,25 @@ export interface CreateCarDTO {
     addedBy?: User;
 }
 export class CarFactory {
-    private static counter = 0;
+    constructor(private readonly carReferenceGenerator: CarReferenceGenerator) {}
 
-    public static create(data: CreateCarDTO): Car {
-        const reference = this.generateReference();
-
+    async create(data: CreateCarDTO): Promise<Car> {
+        const reference = await this.carReferenceGenerator.generateUniqueReference(data.brand, data.model);
         return new Car({
             immatriculation: data.immatriculation,
             brand: data.brand,
             model: data.model,
             year: data.year,
+            status: CarStatus.AVAILABLE,
             kilometers: data.kilometers,
             price: data.price,
             images: data.images,
             motorisation: data.motorisation,
             fuelType: data.fuelType,
             color: data.color,
-            addedBy: data.addedBy?.getId() ?? 0,
-            status: CarStatus.AVAILABLE,
-            reference,
+            reference: reference,
+            addedBy: data.addedBy ? data.addedBy.getId() : "",
+            createdAt: new Date().toISOString(),
         });
-    }
-
-    private static generateReference(): string {
-        const year = new Date().getFullYear();
-        this.counter++;
-        return `CAR-${year}-${this.counter.toString().padStart(4, '0')}`;
     }
 }

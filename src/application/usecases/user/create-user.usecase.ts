@@ -1,7 +1,7 @@
-import { UserRepository } from '../repositories/user.repository.js';
-import { UserFactory } from '../../domain/user/UserFactory.js';
-import type { CreateUserDTO } from '../../domain/user/UserFactory.js';
-import type { User } from '../../domain/user/User.js';
+import { UserRepository } from '../../repositories/user.repository.js';
+import { UserFactory } from '../../../domain/user/UserFactory.js';
+import type { CreateUserDTO } from '../../../domain/user/UserFactory.js';
+import type { User } from '../../../domain/user/User.js';
 
 export class CreateUserUseCase {
     constructor(
