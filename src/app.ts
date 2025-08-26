@@ -1,16 +1,14 @@
-import { UserInMemoryRepository } from './infrastructure/memory/user.inmemory.repository.js';
-import { UniqueUserIdGenerator } from './domain/user/UniqueUserIdGenerator.js';
-import { UserFactory } from './domain/user/UserFactory.js';
-import { CreateUserUseCase } from './application/usecases/user/create-user.usecase.js';
+import fastify from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
-const userRepository = new UserInMemoryRepository();
-const userIdGenerator = new UniqueUserIdGenerator(userRepository);
-const userFactory = new UserFactory(userIdGenerator);
+export function buildApp() {
+    const app = fastify({
+        logger: true,
+    })
 
-const createUserUseCase = new CreateUserUseCase(userRepository, userFactory);
+    app.get("/", (request: FastifyRequest, reply: FastifyReply) => {
+        reply.send('API démarrée et opérationnelle')
+    })
 
-export const app = {
-    useCases: {
-        createUser: createUserUseCase,
-    },
-};
+    return app
+}
