@@ -28,6 +28,4 @@ describe('Feature : Create a user', () => {
         expect(createdUser.getEmail()).toBe('jane.doe@garage-vincent-parrot.com');
         expect(createdUser.getId()).toBe('VP-JADO90');
     })
-
-    
 })

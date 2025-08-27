@@ -1,5 +1,6 @@
 import { User, Role } from "../../models/User.js";
 import type { UniqueUserIdService } from "./UniqueUserIdService.js";
+import type { TemporaryPasswordService } from "./TemporaryPasswordService.js";
 
 export interface CreateUserDTO {
     firstname: string;
@@ -9,7 +10,7 @@ export interface CreateUserDTO {
 }
 
 export class UserFactory {
-    constructor(private readonly uniqueUserIdService: UniqueUserIdService) {}
+    constructor(private readonly uniqueUserIdService: UniqueUserIdService, private readonly temporaryPasswordService: TemporaryPasswordService) {}
 
     private generateEmail(firstname: string, lastname: string): string {
         const domain = 'garage-vincent-parrot.com';
@@ -21,7 +22,8 @@ export class UserFactory {
     async createUser(data: CreateUserDTO): Promise<User> {
         const email = this.generateEmail(data.firstname, data.lastname);
         const id = await this.uniqueUserIdService.generateUniqueId(data.firstname, data.lastname, data.birthdate);
-        const newUser = new User(id, data.firstname, data.lastname, data.birthdate, data.role, email);
+        const temporaryPassword = this.temporaryPasswordService.generateTemporaryPassword(20);
+        const newUser = new User(id, data.firstname, data.lastname, data.birthdate, data.role, email, temporaryPassword);
         return newUser;
     }
 }

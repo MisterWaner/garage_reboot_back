@@ -14,7 +14,7 @@ export class User {
         private birthdate: Date,
         private role: Role,
         private email: string,
-        private password: string = 'azertyop123456',
+        private password: string,
         isActive: boolean = true
     ) {
         this.active = isActive;
