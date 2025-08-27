@@ -31,8 +31,8 @@ export class Car {
     private reference: string;
     private addedBy?: string | undefined;
     private updatedBy?: string | undefined;
-    private readonly createdAt: Date;
-    private readonly updatedAt: Date;
+    private readonly createdAt: string | undefined;
+    private updatedAt?: string | undefined;
 
     constructor(props: {
         immatriculation: string;
@@ -49,8 +49,8 @@ export class Car {
         reference: string;
         addedBy?: string;
         updatedBy?: string;
-        createdAt: Date;
-        updatedAt: Date;
+        createdAt?: string;
+        updatedAt?: string;
     }) {
         this.validateYear(props.year);
         this.validateMileage(props.mileage);
@@ -90,5 +90,70 @@ export class Car {
         if (price < 0) {
             throw new Error('Invalid price');
         }
+    }
+
+    // Getters
+    getId(): string {
+        return this.id;
+    }
+
+    getBrand(): string {
+        return this.brand;
+    }
+
+    getModel(): string {
+        return this.model;
+    }
+
+    getYear(): number {
+        return this.year;
+    }
+
+    getStatus(): CarStatus {
+        return this.status;
+    }
+
+    getMotorisation(): Motorisation {
+        return this.motorisation;
+    }
+
+    getFuelType(): FuelType {
+        return this.fuelType;
+    }
+
+    getMileage(): number {
+        return this.mileage;
+    }
+
+    getPrice(): number {
+        return this.price;
+    }
+
+    getImages(): string[] {
+        return this.images;
+    }
+
+    getColor(): string {
+        return this.color;
+    }
+
+    getReference(): string {
+        return this.reference;
+    }
+
+    getAddedBy(): string | undefined {
+        return this.addedBy;
+    }
+
+    getUpdatedBy(): string | undefined {
+        return this.updatedBy;
+    }
+
+    getCreatedAt(): string | undefined {
+        return this.createdAt;
+    }
+
+    getUpdatedAt(): string | undefined {
+        return this.updatedAt;
     }
 }
